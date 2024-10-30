@@ -1,0 +1,224 @@
+# Generated from fixed seeds; edit the stages freely, regenerate the jobs with care.
+name: back-office-reconcile
+description: Reconcile a supplier's September invoices against the ledger, draft the follow-up and decide on payment.
+stages:
+- id: invoices
+  tool: load
+  params:
+    key: invoices
+  undo_cost: 2
+  instructions: Fetch the supplier's invoices for September.
+- id: ledger
+  tool: load
+  params:
+    key: ledger
+  undo_cost: 2
+  instructions: Read the ledger entries for the supplier.
+- id: match_invoices
+  tool: match_invoices
+  deps:
+  - invoices
+  - ledger
+  undo_cost: 2
+  instructions: Pair each invoice with its ledger entry by reference.
+- id: flag_mismatches
+  tool: flag_mismatches
+  deps:
+  - match_invoices
+  params:
+    tolerance: 0.01
+  undo_cost: 2
+  instructions: List invoice references whose amounts differ or that are missing from the ledger.
+- id: invoice_total
+  tool: total
+  deps:
+  - invoices
+  undo_cost: 1
+  instructions: Sum the invoice amounts.
+- id: ledger_total
+  tool: total
+  deps:
+  - ledger
+  undo_cost: 1
+  instructions: Sum the ledger amounts.
+- id: balance
+  tool: balance
+  deps:
+  - invoice_total
+  - ledger_total
+  params:
+    between:
+    - invoice_total
+    - ledger_total
+  undo_cost: 1
+  instructions: Difference between invoice and ledger totals.
+- id: draft_email
+  tool: draft_email
+  deps:
+  - flag_mismatches
+  check: judge
+  undo_cost: 3
+  instructions: Draft an email to the supplier listing every mismatched invoice.
+- id: approve_payment
+  tool: approve_payment
+  deps:
+  - flag_mismatches
+  - invoice_total
+  params:
+    limit: 10000
+  undo_cost: 8
+  critical: true
+  instructions: Approve payment only when nothing is flagged and the total is within the limit.
+jobs:
+- id: reconcile-01
+  inputs:
+    supplier: Acme Paper
+    invoices:
+    - ref: INV-20260101
+      amount: 177.02
+    - ref: INV-20260102
+      amount: 747.07
+    - ref: INV-20260103
+      amount: 628.92
+    - ref: INV-20260104
+      amount: 1799.15
+    ledger:
+    - ref: INV-20260101
+      amount: 177.02
+    - ref: INV-20260102
+      amount: 747.07
+    - ref: INV-20260103
+      amount: 628.92
+    - ref: INV-20260104
+      amount: 1799.15
+- id: reconcile-02
+  inputs:
+    supplier: Brightwater Foods
+    invoices:
+    - ref: INV-20260201
+      amount: 1466.32
+    - ref: INV-20260202
+      amount: 192.46
+    - ref: INV-20260203
+      amount: 333.63
+    - ref: INV-20260204
+      amount: 650.47
+    ledger:
+    - ref: INV-20260201
+      amount: 1466.32
+    - ref: INV-20260203
+      amount: 383.63
+    - ref: INV-20260204
+      amount: 650.47
+- id: reconcile-03
+  inputs:
+    supplier: Calder Freight
+    invoices:
+    - ref: INV-20260301
+      amount: 1399.64
+    - ref: INV-20260302
+      amount: 1752.52
+    - ref: INV-20260303
+      amount: 1719.02
+    - ref: INV-20260304
+      amount: 1076.51
+    ledger:
+    - ref: INV-20260301
+      amount: 1399.64
+    - ref: INV-20260302
+      amount: 1752.52
+    - ref: INV-20260303
+      amount: 1719.02
+    - ref: INV-20260304
+      amount: 1076.51
+- id: reconcile-04
+  inputs:
+    supplier: Dunmore Print
+    invoices:
+    - ref: INV-20260401
+      amount: 1463.53
+    - ref: INV-20260402
+      amount: 1965.5
+    - ref: INV-20260403
+      amount: 134.82
+    - ref: INV-20260404
+      amount: 1957.27
+    - ref: INV-20260405
+      amount: 1711.76
+    - ref: INV-20260406
+      amount: 895.77
+    - ref: INV-20260407
+      amount: 474.49
+    ledger:
+    - ref: INV-20260401
+      amount: 1463.53
+    - ref: INV-20260403
+      amount: 134.82
+    - ref: INV-20260404
+      amount: 1957.27
+    - ref: INV-20260405
+      amount: 1711.76
+    - ref: INV-20260406
+      amount: 895.77
+    - ref: INV-20260407
+      amount: 474.49
+- id: reconcile-05
+  inputs:
+    supplier: Elm Office Supplies
+    invoices:
+    - ref: INV-20260501
+      amount: 353.04
+    - ref: INV-20260502
+      amount: 986.23
+    - ref: INV-20260503
+      amount: 938.47
+    - ref: INV-20260504
+      amount: 904.22
+    - ref: INV-20260505
+      amount: 723.11
+    - ref: INV-20260506
+      amount: 219.07
+    ledger:
+    - ref: INV-20260501
+      amount: 353.04
+    - ref: INV-20260502
+      amount: 986.23
+    - ref: INV-20260503
+      amount: 988.47
+    - ref: INV-20260504
+      amount: 904.22
+    - ref: INV-20260505
+      amount: 723.11
+    - ref: INV-20260506
+      amount: 219.07
+- id: reconcile-06
+  inputs:
+    supplier: Fenwick Cleaning
+    invoices:
+    - ref: INV-20260601
+      amount: 1342.6
+    - ref: INV-20260602
+      amount: 2338.7
+    - ref: INV-20260603
+      amount: 983.06
+    - ref: INV-20260604
+      amount: 1378.65
+    - ref: INV-20260605
+      amount: 2011.04
+    - ref: INV-20260606
+      amount: 1530.23
+    - ref: INV-20260607
+      amount: 2084.69
+    ledger:
+    - ref: INV-20260601
+      amount: 1342.6
+    - ref: INV-20260603
+      amount: 983.06
+    - ref: INV-20260604
+      amount: 1378.65
+    - ref: INV-20260605
+      amount: 2011.04
+    - ref: INV-20260606
+      amount: 1530.23
+    - ref: INV-20260607
+      amount: 2084.69
