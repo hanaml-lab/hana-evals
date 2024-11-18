@@ -1,0 +1,32 @@
+# Workspace root: shared tool settings and the uv workspace for the packages under packages/.
+[project]
+name = "hana-evals-workspace"
+version = "0.5.0"
+requires-python = ">=3.10"
+dependencies = ["hana-evals", "eval-harness[duckdb]", "judge-cal"]
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.6", "nbformat>=5"]
+
+[tool.uv]
+package = false
+
+[tool.uv.workspace]
+members = ["packages/eval-harness", "packages/judge-cal", "packages/hana-evals"]
+
+[tool.uv.sources]
+eval-harness = { workspace = true }
+judge-cal = { workspace = true }
+hana-evals = { workspace = true }
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+extend-exclude = ["*.ipynb"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["B905"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["eval_harness", "judge_cal", "hana_evals"]

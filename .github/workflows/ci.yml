@@ -1,0 +1,29 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: uv sync
+      - run: uv run ruff check .
+      - run: make test
+      - run: uv run python examples/end_to_end.py
+      - run: uv run python -c "import nbformat; nbformat.validate(nbformat.read('packages/judge-cal/notebooks/ci-with-judge-error.ipynb', 4))"
+
+  sandbox-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -f packages/eval-harness/docker/sandbox.Dockerfile -t eval-sandbox .
