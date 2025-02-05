@@ -1,0 +1,5 @@
+model: Qwen/Qwen3-32B
+max_steps: 80
+review_budget: 0.2
+placement: dependency     # or: uniform, last
+judge: hanaml/judge-7b

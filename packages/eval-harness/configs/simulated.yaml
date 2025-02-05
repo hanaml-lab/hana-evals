@@ -1,0 +1,6 @@
+# A seeded agent that makes a mistake on 8% of first attempts; runs offline in seconds.
+model: simulated
+error_rate: 0.08
+seed: 0
+review_budget: 0.2
+placement: dependency
