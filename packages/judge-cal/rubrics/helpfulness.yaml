@@ -1,0 +1,6 @@
+scale: [1, 5]
+criteria:
+  - Answers the question that was asked
+  - States facts that the sources support
+  - Says when it does not know
+reference_answer: optional

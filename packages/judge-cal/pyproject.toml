@@ -1,0 +1,16 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "judge-cal"
+version = "0.3.0"
+description = "Measures how far a model-as-judge agrees with human raters, corrects its biases, and calibrates its scores."
+readme = "README.md"
+license = "Apache-2.0"
+authors = [{ name = "hanaML", email = "hello@hanaml.com" }]
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.26", "pyyaml>=6"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["judge_cal"]

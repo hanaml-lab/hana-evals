@@ -1,0 +1,7 @@
+scale: [1, 5]
+criteria:
+  - Every claim is supported by the provided context
+  - Numbers, names and dates match the context exactly
+  - Does not add facts that the context does not contain
+  - Qualifications in the context (dates, conditions, exceptions) are kept
+reference_answer: required
