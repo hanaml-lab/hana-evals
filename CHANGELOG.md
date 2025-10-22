@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0 (2025-10-22)
+
+- judge-cal: intervals that include the judge's disagreement with people
+
 ## 0.3.0 (2025-10-13)
 
 - judge-cal: rubric judge, order swap, length bias audit, isotonic and Platt calibration
