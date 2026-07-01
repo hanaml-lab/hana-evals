@@ -1,0 +1,15 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hana-evals"
+version = "0.5.0"
+description = "Long-job evaluation with calibrated LLM judges: eval-harness and judge-cal together."
+license = "Apache-2.0"
+authors = [{ name = "hanaML", email = "hello@hanaml.com" }]
+requires-python = ">=3.10"
+dependencies = ["eval-harness", "judge-cal"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["hana_evals"]
