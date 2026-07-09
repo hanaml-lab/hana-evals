@@ -34,3 +34,50 @@ flowchart LR
   `JudgeCheck` that `hana_evals.calibrated_check` builds; code stages are checked against the stage's tool.
 - The same calibrator scores a batch of outputs afterwards, and `judge_cal.report.summary` gives the acceptance rate
   with an interval that resamples the human labels as well as the items.
+
+## Quickstart
+
+```bash
+git clone https://github.com/hanaml-lab/hana-evals && cd hana-evals
+uv sync
+uv run python examples/end_to_end.py
+```
+
+The example calibrates a judge on `examples/data/email-labels.jsonl`, runs the six-job reconciliation suite eight
+times per job under two placement strategies, and prints pass^k, undetected critical errors and the email acceptance
+interval. It runs offline with a seeded simulated agent and a reference-based judge; point `Judge` at a vLLM server
+running `hanaml/judge-7b` and the agent config at your model to measure real systems.
+
+```python
+from eval_harness import Runner, Suite
+from hana_evals import calibrated_check
+from judge_cal import Judge
+
+judge = Judge(endpoint="http://localhost:8000/v1", model="hanaml/judge-7b",
+              rubric="packages/judge-cal/rubrics/faithfulness.yaml")
+check, cal = calibrated_check(judge, "labels/heldout-300.jsonl")
+result = Runner(agent="packages/eval-harness/configs/agent.yaml", repeats=8,
+                review_budget=0.2, judge_check=check).run(Suite.load("packages/eval-harness/suites/back-office"))
+print(result.pass_k(8), result.undetected_critical_per_100)
+```
+
+## Development
+
+```bash
+make test     # each package's tests, then the integration test
+make lint
+```
+
+## Related
+
+- Research: [long-job evaluation suite](https://hanaml.com/research/long-job-evaluation-suite),
+  [judge calibration](https://hanaml.com/research/judge-calibration).
+- Papers: [Calibrating model judges against human labels](https://hanaml.com/research/papers/calibrating-llm-judges),
+  [The cost of reliability in long agent runs](https://hanaml.com/research/papers/cost-of-reliability-long-runs).
+- Model: [judge-7b](https://hanaml.com/models/judge-7b).
+- [hana-agents](https://github.com/hanaml-lab/hana-agents) and [hana-knowledge](https://github.com/hanaml-lab/hana-knowledge)
+  are evaluated with this harness.
+
+## Licence
+
+Apache-2.0. See `LICENSE`.
