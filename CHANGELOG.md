@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.0 (2026-10-06)
+
+- judged stages use a calibrated judge
+- end-to-end example and integration test
+
 ## 0.4.0 (2025-10-22)
 
 - judge-cal: intervals that include the judge's disagreement with people
