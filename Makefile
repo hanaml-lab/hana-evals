@@ -14,3 +14,4 @@ lint:
 
 example:
 	uv run python examples/end_to_end.py
+	uv run python examples/perturbation_test.py
