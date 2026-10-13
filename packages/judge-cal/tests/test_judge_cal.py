@@ -67,3 +67,24 @@ def test_calibration_reduces_ece_and_report_interval_is_wider():
     assert s.low <= s.mean <= s.high
     assert (s.high - s.low) > 0
     assert "95% CI" in str(s)
+
+
+def test_audit_measures_self_preference_against_human_verdicts():
+    # Four pairs, each with one answer from the judge's own family ("qwen"). People prefer the qwen answer in one of
+    # the four (0.25); a judge that always picks the qwen answer wins it in all four (1.0), so it is 0.75 above people.
+    rows = [
+        {"question": "q1", "a": "own", "b": "other", "families": {"a": "qwen", "b": "llama"}, "human": "A"},
+        {"question": "q2", "a": "other", "b": "own", "families": {"a": "llama", "b": "qwen"}, "human": "A"},
+        {"question": "q3", "a": "own", "b": "other", "families": {"a": "qwen", "b": "gemma"}, "human": "B"},
+        {"question": "q4", "a": "other", "b": "own", "families": {"a": "gemma", "b": "qwen"}, "human": "A"},
+        {"question": "q5", "a": "x", "b": "y", "human": "A"},  # no family: not a self-preference pair
+    ]
+
+    def partisan(prompt: str) -> str:
+        a = prompt.split("[Answer A]\n")[1].split("\n\n[Answer B]")[0]
+        return "[[A]]" if a == "own" else "[[B]]"
+
+    audit = bias.audit(Judge(backend=partisan, rubric="rubrics/helpfulness.yaml"), rows, family="qwen")
+    assert audit.self_pairs == 4
+    assert audit.self_preference == pytest.approx(0.75)
+    assert bias.audit(Judge(backend=partisan), rows).self_pairs == 0  # no family given, nothing measured

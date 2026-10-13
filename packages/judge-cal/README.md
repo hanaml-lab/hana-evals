@@ -30,6 +30,9 @@ judge = Judge(endpoint="http://localhost:8000/v1", model="hanaml/judge-7b",
 audit = bias.audit(judge, pairs="data/controlled-length-pairs.jsonl")
 print(audit.position_flip_rate, audit.length_win_rate)
 
+own = bias.audit(judge, pairs="labels/cross-family-pairs.jsonl", family="qwen")   # rows carry "families"
+print(own.self_preference, own.self_pairs)
+
 cal = calibrate.fit(judge, human_labels="labels/heldout-300.jsonl", method="isotonic")
 scores = cal.score(judge, items="runs/candidate.jsonl")
 print(report.summary(scores, human_agreement=cal.agreement))   # mean with 95% CI
@@ -43,6 +46,7 @@ interval behaves as the label set shrinks.
 
 - **Position bias.** Each pair is judged in both orders; a verdict that changes is a flip. With `swap=True` the two verdicts are combined and an inconsistent pair counts as a tie.
 - **Length bias.** On pairs that humans rated equal but that differ in length, an unbiased judge picks the longer one 50% of the time.
+- **Self-preference.** With `family=` set to the judge's model family, pairs that carry `families` with exactly one answer from it give the judge's win rate for its own family's answers minus the people's win rate on the same pairs; 0 is unbiased.
 - **Agreement.** Pairwise agreement with the human majority, and Spearman correlation for 1–5 rubric scores.
 - **Calibration.** Isotonic or Platt scaling on held-out human labels; expected calibration error before and after (cross-validated).
 - **Reporting.** The final interval widens with the judge's measured disagreement with humans, rather than treating the judge as ground truth: the bootstrap resamples the human labels and refits the calibration, as well as resampling the items.
