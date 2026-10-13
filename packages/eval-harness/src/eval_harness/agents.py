@@ -4,6 +4,7 @@
 result the way agents do (an off-by-a-bit figure, a dropped row, a truncated draft). It needs no
 model and is seeded, which makes placement and fault experiments exactly repeatable.
 ``ChatAgent`` asks a model behind an OpenAI-compatible endpoint for the stage output as JSON.
+``ReplayAgent`` is a deliberate reward hack, for testing detectors such as ``perturbation``.
 """
 
 from __future__ import annotations
@@ -54,6 +55,18 @@ class SimulatedAgent:
         out = job.run_tool(stage, upstream)
         rate = self.error_rate if attempt == 0 else self.retry_error_rate
         return corrupt(out, rng) if rng.random() < rate else out
+
+
+class ReplayAgent:
+    """A reward hack for testing detectors: replays answers it has seen, recognising a job by one of
+    its literal inputs (``key``) rather than solving it. It passes every check on a job whose answers
+    leaked; on an unseen job it answers ``None``."""
+
+    def __init__(self, answers: dict[Any, dict[str, Any]], key: str = "supplier"):
+        self.answers, self.key = answers, key
+
+    def act(self, job: Job, stage: Stage, upstream: dict[str, Any], attempt: int) -> Any:
+        return copy.deepcopy(self.answers.get(job.inputs.get(self.key), {}).get(stage.id))
 
 
 class ChatAgent:
