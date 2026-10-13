@@ -43,7 +43,7 @@ be reproduced from the folder alone.
 ## How it works
 
 - **Stages.** A job is a graph of stages, each with inputs, outputs and a check. A check may be code (does the ledger balance?) or a judge.
-- **Placement.** With a review budget of, say, 20% of stages, checks go first to stages with the most dependants and the most expensive undo.
+- **Placement.** A check catches the errors made at its own stage, so with a review budget of, say, 20% of stages, `dependency` placement checks first the stages whose errors cost most downstream. It measures that cost: it corrupts each stage's reference output the way agents err, replays the job's pure tools through every dependant and sums the undo cost of the stages left wrong, counting critical stages twice.
 - **Faults.** `faults.py` replaces a tool result with a wrong one at a chosen stage (`--fault <stage>`), then measures the steps until the run is back on track.
 - **pass^k.** A task passes only if all k repeats succeed, which rewards consistency rather than one lucky run.
 - **Store.** Results go to DuckDB (and JSON Lines), one row per stage per run, with OpenTelemetry trace ids.

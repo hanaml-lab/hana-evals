@@ -30,13 +30,27 @@ def test_cycle_rejected():
         Job("j", (Stage("a", "load", deps=("b",)), Stage("b", "load", deps=("a",))))
 
 
-def test_dependency_placement_prefers_wide_stages(suite):
-    job = suite.jobs[0]
+def test_dependency_placement_follows_where_an_error_spreads(suite):
+    job = suite.jobs[0]  # reconcile-01: every invoice matches its ledger entry
     picked = place(job, 0.2, "dependency")
     assert len(picked) == 2
-    # the payment decision is critical and costly to undo; a wrong invoice read reaches six stages
-    assert picked == {"approve_payment", "invoices"}
+    # Worked by hand. A dropped ledger row leaves a matched invoice unmatched: it is flagged, the email changes and
+    # a payment that should go out is held (cost 2+2+2+1+1+3+2*8 = 27). An empty flag list that gains an entry does
+    # the same downstream (2+3+16 = 21). A dropped invoice row changes only the totals and the match (6), so the
+    # stage with the most dependants is not the one worth checking here.
+    assert picked == {"ledger", "flag_mismatches"}
+    assert place(job, 0.3, "dependency") == {"ledger", "flag_mismatches", "approve_payment"}
     assert place(job, 0.2, "last") == {"draft_email", "approve_payment"}
+
+
+def test_dependency_placement_leaves_fewer_critical_errors_undetected_than_last(suite):
+    undetected = {"dependency": 0.0, "last": 0.0}
+    for seed in range(1, 6):
+        cfg = {"model": "simulated", "error_rate": 0.12, "seed": seed}
+        for placement in undetected:
+            r = Runner(agent=cfg, repeats=8, placement=placement, review_budget=0.3).run(suite)
+            undetected[placement] += r.undetected_critical_per_100
+    assert undetected["dependency"] < undetected["last"]
 
 
 def test_pass_hat_k():
@@ -59,7 +73,8 @@ def test_dependency_placement_beats_last(suite):
 
 def test_fault_recovery_with_and_without_a_check(suite):
     cfg = {"model": "simulated", "error_rate": 0.0}
-    checked = Runner(agent=cfg, repeats=2, placement="dependency", review_budget=0.2,
+    # every stage checked, so the wrong invoice read is caught where it happens
+    checked = Runner(agent=cfg, repeats=2, placement="dependency", review_budget=1.0,
                      faults=[Fault("invoices")]).run(suite)
     assert checked.median_recovery == 1
     unchecked = Runner(agent=cfg, repeats=2, placement="last", review_budget=0.1,
