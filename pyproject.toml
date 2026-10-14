@@ -1,7 +1,7 @@
 # Workspace root: shared tool settings and the uv workspace for the packages under packages/.
 [project]
 name = "hana-evals-workspace"
-version = "0.5.0"
+version = "0.6.0"
 requires-python = ">=3.10"
 dependencies = ["hana-evals", "eval-harness[duckdb]", "judge-cal"]
 

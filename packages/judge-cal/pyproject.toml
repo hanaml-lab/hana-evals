@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "judge-cal"
-version = "0.3.0"
+version = "0.4.0"
 description = "Measures how far a model-as-judge agrees with human raters, corrects its biases, and calibrates its scores."
 readme = "README.md"
 license = "Apache-2.0"

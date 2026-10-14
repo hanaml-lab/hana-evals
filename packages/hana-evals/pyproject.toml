@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "hana-evals"
-version = "0.5.0"
+version = "0.6.0"
 description = "Long-job evaluation with calibrated LLM judges: eval-harness and judge-cal together."
 license = "Apache-2.0"
 authors = [{ name = "hanaML", email = "hello@hanaml.com" }]

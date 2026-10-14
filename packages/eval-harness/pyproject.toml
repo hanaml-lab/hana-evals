@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "eval-harness"
-version = "0.8.1"
+version = "0.9.0"
 description = "Runs agents against long, multi-stage jobs, places checks where an error would cost most, and scores every stage."
 readme = "README.md"
 license = "Apache-2.0"

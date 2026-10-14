@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.6.0 (2026-10-14)
+
+- eval-harness 0.9.0: `dependency` placement ranks stages by the loss their own errors cause downstream, measured by
+  replaying corrupted outputs through the job's tools; 0.0 undetected critical errors per 100 runs in the example,
+  against 2.1 for the last stages and 4.2 for evenly spaced checks
+- eval-harness 0.9.0: `perturbation.PerturbationTest`, verifier perturbation testing for staged jobs (VPT), and
+  `agents.ReplayAgent`, a reward hack for testing detectors
+- judge-cal 0.4.0: self-preference audit against human verdicts on cross-family pairs
+- examples/perturbation_test.py; the end-to-end example compares three placements over five agent seeds
+- README with results, papers and citation; CITATION.cff; CONTRIBUTING.md; CI runs both examples and validates the
+  citation file
+
 ## 0.5.0 (2026-10-06)
 
 - judged stages use a calibrated judge
