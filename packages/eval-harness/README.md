@@ -60,9 +60,11 @@ placement: dependency     # or: uniform, last
 judge: hanaml/judge-7b
 ```
 
-## Benchmarks
+## Reported results
 
-Same model and the same review budget in both columns.
+From the research project [long-horizon evaluation with calibrated judges](https://hanaml.com/research/trustworthy-evals);
+the same model and the same review budget in both columns. `examples/end_to_end.py` at the root of hana-evals compares
+the placements offline on the back-office suite.
 
 | Metric | Fixed checkpoints | Dependency-aware placement |
 | --- | --- | --- |
