@@ -65,15 +65,21 @@ reference_answer: optional
 
 ## Benchmarks
 
-Qwen3-32B as the judge, 1,200 items with human scores.
+From the [PARC paper](https://hanaml.com/research/papers/calibrating-llm-judges), which calibrates its judge per
+criterion type with the isotonic step judge-cal provides: Qwen3-32B as the judge, pooled over TheAgentCompany, DevAI
+and BackOffice (2,340 runs graded by people), with the maps fitted on 160 graded runs per suite. The criterion judge
+and the audit estimator are in the [paper repo](https://github.com/hanaml-lab/calibrating-llm-judges).
 
-| Metric | Single-prompt judge | Rubric + order swap + calibration |
+| Metric | Rubric in context | Criterion judge with retrieval |
 | --- | --- | --- |
-| Agreement with human majority (pairwise) | 66% | 79% |
-| Position-flip rate | 18% | 4% |
-| Length bias (50% is unbiased) | 71% | 54% |
-| Spearman correlation with human scores | 0.52 | 0.71 |
-| Expected calibration error | 0.14 | 0.05 |
+| Verdict accuracy against people, calibrated | 82.2% | 90.4% |
+| Expected calibration error, raw | 0.267 | 0.174 |
+| Expected calibration error, after calibration | 0.031 | 0.025 |
+| Partial credit added by an appended success claim | 12.2 pts | 1.8 pts |
+| Input tokens per run | 93k | 32k |
+
+Offline, `examples/end_to_end.py` at the root of hana-evals calibrates its reference-based judge on 160 labels and
+prints an ECE of 0.194 before calibration and 0.058 after; that toy result shows the mechanism, not a model's quality.
 
 ## Licence
 

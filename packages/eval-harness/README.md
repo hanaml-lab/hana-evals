@@ -62,9 +62,9 @@ judge: hanaml/judge-7b
 
 ## Reported results
 
-From the research project [long-horizon evaluation with calibrated judges](https://hanaml.com/research/trustworthy-evals);
-the same model and the same review budget in both columns. `examples/end_to_end.py` at the root of hana-evals compares
-the placements offline on the back-office suite.
+The same model and the same review budget in both columns; no paper covers these runs, and the project's papers
+report their own results in the [top-level README](../../README.md#results). `examples/end_to_end.py` at the root of
+hana-evals compares the placements offline on the back-office suite.
 
 | Metric | Fixed checkpoints | Dependency-aware placement |
 | --- | --- | --- |

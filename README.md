@@ -111,21 +111,33 @@ Offline, on the six-job back-office suite, with the commands in the Quickstart.
 The simulated agent and the reference-based judge make these numbers exactly repeatable; they show the mechanisms,
 not the performance of a real model.
 
-### Reported for the project
+### Reported in the papers
 
-From the research project [long-horizon evaluation with calibrated judges](https://hanaml.com/research/trustworthy-evals).
+The project's two papers report these numbers; each row quotes its paper. Both papers are seeded simulation studies
+calibrated to published magnitudes, as their limitations sections say. PARC's criterion judge, two-stage audit and
+estimator, and VPT's harness isolation and property tests, are in the paper repos.
 
-| Metric | Baseline | Ours | Note |
+| Metric | Baseline | Result | Setting | Paper |
+| --- | --- | --- | --- | --- |
+| 95% interval half-width at 8 annotator-hours, TheAgentCompany / DevAI / BackOffice | ±11.5 / ±12.8 / ±13.9 pts | ±4.9 / ±5.8 / ±4.8 pts | Mean partial credit; grading whole runs by hand vs. PARC with a calibrated Qwen3-32B criterion judge | [PARC](https://hanaml.com/research/papers/calibrating-llm-judges) |
+| Human time saved against grading whole runs | 1.0× | 6.0× | Hours whole-run grading needs to match PARC's half-width at 8 h, divided by 8, mean of three suites; active inference 4.1× | PARC |
+| Coverage of nominal 95% intervals | 81–88% | 94.9–95.4% | Three suites at 8 h; the same audit with criteria treated as independent vs. PARC's run-level variance | PARC |
+| Regressions shipped by a release gate | 24–33% | 2.1% | 24 BackOffice agent versions, δ = 2 points; judge-only gates vs. interval gates | PARC |
+| Criterion verdict accuracy against people | 82.2% | 90.4% | Qwen3-32B, calibrated, pooled over suites; rubric in context vs. criterion judge with retrieval (ECE 0.031 vs. 0.025) | PARC |
+| Recall at 1% FPR, all hacks | 73.0% | 78.1% | 6,240 verifier-passing rollouts, 1,412 audited hacks; CoT+action monitor vs. VPT, at 118 vs. 31 GPU-minutes per 1,000 rollouts | [VPT](https://hanaml.com/research/papers/detecting-reward-hacking) |
+| Recall at 1% FPR, rewritten reasoning-dependent hacks | 1.9% | 74.7% | 345 reasoning-dependent hacks after four trace-rewrite passes; CoT+action monitor vs. VPT | VPT |
+| Hack rate after 600 GRPO steps | 42.3% | 5.9% | Qwen3-8B on RL-Coding, 3 seeds; CoT-monitor penalty vs. VPT penalty | VPT |
+
+### Reported by the components
+
+`eval-harness` reports these in its README; no paper covers them.
+
+| Metric | Baseline | Result | Note |
 | --- | --- | --- | --- |
 | Undetected critical errors per 100 runs | 7.8 | 2.9 | Fixed checkpoints vs. dependency-aware placement, same review budget |
-| Agreement with human majority (pairwise) | 66% | 79% | Naive single-prompt judge vs. rubric + order swap |
 | pass^8 (all 8 repeats succeed), tau-bench airline | 21% | 30% | Same model; adaptive checks and replanning |
 | Reviewer minutes per completed job | 11.4 | 6.2 | Uniform review of every write vs. risk-ranked review |
 | Recovery time after injected fault (median steps) | 9 | 3 | Faults detected later cost more steps to undo |
-| Position-flip rate | 18% | 4% | Verdict changes when answer order is swapped |
-| Length bias (win rate of longer answer, equal quality) | 71% | 54% | Controlled pairs; 50% is unbiased |
-| Spearman correlation with human scores | 0.52 | 0.71 | 1-5 rubric scores, 1,200 items |
-| Expected calibration error | 0.14 | 0.05 | After isotonic calibration on held-out labels |
 
 ## Papers
 
@@ -134,7 +146,7 @@ into what is reported: an interval for a calibrated judge, a false-positive boun
 
 | Date | Paper | What this repo implements | PDF | Paper repo |
 | --- | --- | --- | --- | --- |
-| 2026-01-20 | [Judging Long Agent Runs with Valid Error Bars: Prediction-Powered Audits of Rubric Criteria](https://hanaml.com/research/papers/calibrating-llm-judges) | `judge-cal`: bias probes, order swapping, isotonic and Platt calibration, intervals that include the judge's error; `hana-evals`: the calibrated judge as a stage check. | [PDF](https://hanaml.com/papers/calibrating-llm-judges.pdf) | [calibrating-llm-judges](https://github.com/hanaml-lab/calibrating-llm-judges) |
+| 2026-01-20 | [Judging Long Agent Runs with Valid Error Bars: Prediction-Powered Audits of Rubric Criteria](https://hanaml.com/research/papers/calibrating-llm-judges) | `judge-cal`: bias probes, order swapping, isotonic and Platt calibration, intervals that include the judge's error; `hana-evals`: the calibrated judge as a stage check. The criterion judge, the two-stage audit and the prediction-powered estimator are in the paper repo. | [PDF](https://hanaml.com/papers/calibrating-llm-judges.pdf) | [calibrating-llm-judges](https://github.com/hanaml-lab/calibrating-llm-judges) |
 | 2026-10-07 | [Verifier Perturbation Testing: Trace-Independent Detection of Reward Hacking in RL-Trained Coding Agents](https://hanaml.com/research/papers/detecting-reward-hacking) | `eval-harness.perturbation`: the invariance gap, robust standardisation and the split-conformal threshold, with two perturbation families for staged jobs. The paper's sandboxed harness isolation and specification-derived property tests are in the paper repo. | [PDF](https://hanaml.com/papers/detecting-reward-hacking.pdf) | [detecting-reward-hacking](https://github.com/hanaml-lab/detecting-reward-hacking) |
 
 Related: [Where to Check: Budget-Optimal Placement of Verifiers and Rollbacks for Long-Horizon Agents](https://hanaml.com/research/papers/cost-of-reliability-long-runs)
