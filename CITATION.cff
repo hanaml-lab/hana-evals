@@ -22,7 +22,7 @@ keywords:
   - reward-hacking
 references:
   - type: report
-    title: "Calibrating model judges against human labels"
+    title: "Judging Long Agent Runs with Valid Error Bars: Prediction-Powered Audits of Rubric Criteria"
     authors:
       - family-names: Agarwal
         given-names: Manav

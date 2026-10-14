@@ -134,10 +134,10 @@ into what is reported: an interval for a calibrated judge, a false-positive boun
 
 | Date | Paper | What this repo implements | PDF | Paper repo |
 | --- | --- | --- | --- | --- |
-| 2026-01-20 | [Calibrating model judges against human labels](https://hanaml.com/research/papers/calibrating-llm-judges) | `judge-cal`: bias probes, order swapping, isotonic and Platt calibration, intervals that include the judge's error; `hana-evals`: the calibrated judge as a stage check. | [PDF](https://hanaml.com/papers/calibrating-llm-judges.pdf) | [calibrating-llm-judges](https://github.com/hanaml-lab/calibrating-llm-judges) |
+| 2026-01-20 | [Judging Long Agent Runs with Valid Error Bars: Prediction-Powered Audits of Rubric Criteria](https://hanaml.com/research/papers/calibrating-llm-judges) | `judge-cal`: bias probes, order swapping, isotonic and Platt calibration, intervals that include the judge's error; `hana-evals`: the calibrated judge as a stage check. | [PDF](https://hanaml.com/papers/calibrating-llm-judges.pdf) | [calibrating-llm-judges](https://github.com/hanaml-lab/calibrating-llm-judges) |
 | 2026-10-07 | [Verifier Perturbation Testing: Trace-Independent Detection of Reward Hacking in RL-Trained Coding Agents](https://hanaml.com/research/papers/detecting-reward-hacking) | `eval-harness.perturbation`: the invariance gap, robust standardisation and the split-conformal threshold, with two perturbation families for staged jobs. The paper's sandboxed harness isolation and specification-derived property tests are in the paper repo. | [PDF](https://hanaml.com/papers/detecting-reward-hacking.pdf) | [detecting-reward-hacking](https://github.com/hanaml-lab/detecting-reward-hacking) |
 
-Related: [The cost of reliability in long agent runs](https://hanaml.com/research/papers/cost-of-reliability-long-runs)
+Related: [Where to Check: Budget-Optimal Placement of Verifiers and Rollbacks for Long-Horizon Agents](https://hanaml.com/research/papers/cost-of-reliability-long-runs)
 models check placement and retries for long runs; [hana-agents](https://github.com/hanaml-lab/hana-agents) and
 [hana-knowledge](https://github.com/hanaml-lab/hana-knowledge) are evaluated with this harness.
 
@@ -181,7 +181,7 @@ If you use judge calibration or the perturbation test, please also cite the pape
 ```bibtex
 @techreport{agarwal2026calibrating,
   author      = {Agarwal, Manav},
-  title       = {Calibrating model judges against human labels},
+  title       = {Judging Long Agent Runs with Valid Error Bars: Prediction-Powered Audits of Rubric Criteria},
   institution = {hanaML},
   type        = {Technical report},
   year        = {2026},
