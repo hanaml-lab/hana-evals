@@ -5,10 +5,18 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python: ["3.10", "3.12"]
     steps:
@@ -16,11 +24,13 @@ jobs:
       - uses: astral-sh/setup-uv@v5
         with:
           python-version: ${{ matrix.python }}
-      - run: uv sync
-      - run: uv run ruff check .
+      - run: uv sync --locked
+      - run: make lint
       - run: make test
-      - run: uv run python examples/end_to_end.py
+      - run: make example
       - run: uv run python -c "import nbformat; nbformat.validate(nbformat.read('packages/judge-cal/notebooks/ci-with-judge-error.ipynb', 4))"
+      - name: CITATION.cff is valid
+        run: uvx cffconvert --validate
 
   sandbox-image:
     runs-on: ubuntu-latest
