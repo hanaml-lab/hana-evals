@@ -146,7 +146,7 @@ into what is reported: an interval for a calibrated judge, a false-positive boun
 
 | Date | Paper | What this repo implements | PDF | Paper repo |
 | --- | --- | --- | --- | --- |
-| 2026-01-20 | [Judging Long Agent Runs with Valid Error Bars: Prediction-Powered Audits of Rubric Criteria](https://hanaml.com/research/papers/calibrating-llm-judges) | `judge-cal`: bias probes, order swapping, isotonic and Platt calibration, intervals that include the judge's error; `hana-evals`: the calibrated judge as a stage check. The criterion judge, the two-stage audit and the prediction-powered estimator are in the paper repo. | [PDF](https://hanaml.com/papers/calibrating-llm-judges.pdf) | [calibrating-llm-judges](https://github.com/hanaml-lab/calibrating-llm-judges) |
+| 2025-09-30 | [Judging Long Agent Runs with Valid Error Bars: Prediction-Powered Audits of Rubric Criteria](https://hanaml.com/research/papers/calibrating-llm-judges) | `judge-cal`: bias probes, order swapping, isotonic and Platt calibration, intervals that include the judge's error; `hana-evals`: the calibrated judge as a stage check. The criterion judge, the two-stage audit and the prediction-powered estimator are in the paper repo. | [PDF](https://hanaml.com/papers/calibrating-llm-judges.pdf) | [calibrating-llm-judges](https://github.com/hanaml-lab/calibrating-llm-judges) |
 | 2026-10-07 | [Verifier Perturbation Testing: Trace-Independent Detection of Reward Hacking in RL-Trained Coding Agents](https://hanaml.com/research/papers/detecting-reward-hacking) | `eval-harness.perturbation`: the invariance gap, robust standardisation and the split-conformal threshold, with two perturbation families for staged jobs. The paper's sandboxed harness isolation and specification-derived property tests are in the paper repo. | [PDF](https://hanaml.com/papers/detecting-reward-hacking.pdf) | [detecting-reward-hacking](https://github.com/hanaml-lab/detecting-reward-hacking) |
 
 Related: [Where to Check: Budget-Optimal Placement of Verifiers and Rollbacks for Long-Horizon Agents](https://hanaml.com/research/papers/cost-of-reliability-long-runs)
@@ -191,12 +191,12 @@ If you use hana-evals, please cite it (`CITATION.cff` has the same record):
 If you use judge calibration or the perturbation test, please also cite the paper:
 
 ```bibtex
-@techreport{agarwal2026calibrating,
+@techreport{agarwal2025calibrating,
   author      = {Agarwal, Manav},
   title       = {Judging Long Agent Runs with Valid Error Bars: Prediction-Powered Audits of Rubric Criteria},
   institution = {hanaML},
   type        = {Technical report},
-  year        = {2026},
+  year        = {2025},
   url         = {https://hanaml.com/research/papers/calibrating-llm-judges}
 }
 
